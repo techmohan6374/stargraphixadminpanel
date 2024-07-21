@@ -4,4 +4,3 @@ document.addEventListener('DOMContentLoaded', () => {
         router
     });
 });
-DisableDevtool();
