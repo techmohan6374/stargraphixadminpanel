@@ -8,7 +8,7 @@ const Login = {
                         <img src="/resources/images/STAR GRAPHIX LOGO.png" alt="Star Graphix Logo">
                     </div>
                     <h2 class="text-center fw-bold my-2" style="font-size: 33px;">Welcome back!</h2>
-                    <h4 class="text-center mb-3" style="font-size: 18px;">Log in to access your pdf generation.</h4>
+                    <h4 class="text-center mb-3" style="font-size: 18px;">Log in to dashboard.</h4>
                     <div class="email-input flex mb-4">
                         <input type="email" placeholder="Enter Email" v-model="email">
                         <iconify-icon icon="mdi:email-open-outline"></iconify-icon>
