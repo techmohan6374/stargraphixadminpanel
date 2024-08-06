@@ -26,10 +26,10 @@ const Flipbook = {
   data() {
     return {
       file: null,
-      githubToken: "",
+      githubToken: "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",
       owner: "techmohan6374",
       repo: "flipbook-pdf-files",
-      path: "/",
+      path: "pdf-files/",
       fileUrl: "",
     };
   },
