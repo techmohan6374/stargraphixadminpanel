@@ -84,5 +84,3 @@ const Flipbook = {
     },
   },
 };
-
-// githubToken: "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",
