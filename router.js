@@ -3,7 +3,8 @@ const routes = [
     { path: '/main/:password', component: Main },
     { path: '/admin', component: Admin },
     { path: '/invoice', component: Invoice },
-    { path: '/flipbook', component: Flipbook }
+    { path: '/flipbook', component: Flipbook },
+    { path: '/singleflipBook/:pdfName', component: SingleFlipBook }
 ];
 
 const router = new VueRouter({

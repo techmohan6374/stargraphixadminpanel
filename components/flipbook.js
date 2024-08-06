@@ -8,11 +8,13 @@ const Flipbook = {
                 </div>
             </div>
             <div class="row mt-4">
-                <div class="col-12 col-xl-3 mb-3" v-for="val in 15" :key="val">
+                <div class="col-12 col-md-6 col-xl-3 mb-3" v-for="val in files" :key="val.sha">
                     <div class="card flipbook-card">
-                        <p>APPLE FOOD DIGITAL BUSINESS CARD.pdf</p>
-                        <button class="flex"><iconify-icon icon="material-symbols:book-5-outline"></iconify-icon>
-                            View</button>
+                        <p>{{ val.name }}</p>
+                        <button class="flex" v-on:click="openFlipBook(val.name)">
+                          <iconify-icon icon="material-symbols:book-5-outline"></iconify-icon>
+                          View
+                        </button>
                     </div>
                 </div>
             </div>
@@ -22,18 +24,43 @@ const Flipbook = {
         </button>
         <input type="file" ref="fileInput" style="display: none;" @change="handleFileUpload" accept=".pdf">
     </div>
-    `,
+  `,
   data() {
     return {
       file: null,
-      githubToken: "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",
+      githubToken: "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",
       owner: "techmohan6374",
       repo: "flipbook-pdf-files",
       path: "pdf-files/",
       fileUrl: "",
+      files: [],
     };
   },
+  created() {
+    this.fetchFiles();
+  },
   methods: {
+    async fetchFiles() {
+      const url = `https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.path}`;
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `token ${this.githubToken}`,
+            Accept: "application/vnd.github.v3+json",
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          this.files = data;
+        } else {
+          const error = await response.json();
+          console.error(`Error: ${error.message}`);
+        }
+      } catch (error) {
+        console.error(`Error: ${error.message}`);
+      }
+    },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -42,8 +69,9 @@ const Flipbook = {
       this.uploadFile();
     },
     async uploadFile() {
+      var notyf = new Notyf();
       if (!this.file) {
-        alert("Please select a file to upload.");
+        notyf.error("Please select a file to upload.");
         return;
       }
 
@@ -72,15 +100,30 @@ const Flipbook = {
           if (response.ok) {
             const result = await response.json();
             this.fileUrl = result.content.download_url;
-            alert("File uploaded successfully!");
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Uploaded Successfully 😉😎",
+            });
+
+            // Add a slight delay to ensure GitHub has updated the content
+            setTimeout(() => {
+              this.fetchFiles();
+            }, 2000); // 2 seconds delay
           } else {
             const error = await response.json();
-            alert(`Error: ${error.message}`);
+            notyf.error(`Error: ${error.message}`);
           }
         } catch (error) {
-          alert(`Error: ${error.message}`);
+          notyf.error(`Error: ${error.message}`);
         }
       };
     },
+    openFlipBook(pdfName){
+      this.$router.push(`/singleflipBook/${pdfName}`);
+    }
+  },
+  mounted() {
+    this.fetchFiles();
   },
 };
