@@ -7,11 +7,15 @@ const Main = {
                     <div class="card flex">
                         <button class="admin-panel flex" v-on:click="openAdminPanel()">
                         <iconify-icon icon="mdi:user-add-outline"></iconify-icon>
-                        Admin Panel
+                        Order Admin Panel
                         </button>
                         <button class="invoice-generation flex" v-on:click="openInvoicePage()">
                             <iconify-icon icon="fe:document"></iconify-icon>
                             Invoice Generation
+                        </button>
+                            <button class="flipbook-generation flex" v-on:click="openFlipBookPage()">
+                            <iconify-icon icon="material-symbols:book-5-outline"></iconify-icon>
+                            Flipbook Generation
                         </button>
                     </div>
                 </div>
@@ -36,6 +40,9 @@ const Main = {
         },
         openAdminPanel() {
             this.$router.push(`/admin`);
+        },
+        openFlipBookPage(){
+            this.$router.push(`/flipbook`);
         }
     },
 };

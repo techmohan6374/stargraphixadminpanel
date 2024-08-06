@@ -2,6 +2,7 @@
     min-height: 200px;
     background-color: white;
     gap: 20px;
+    padding: 40px 10px;
 }
 
 #mainPage .row {
@@ -9,7 +10,8 @@
 }
 
 #mainPage .invoice-generation,
-#mainPage .admin-panel {
+#mainPage .admin-panel,
+#mainPage .flipbook-generation {
     border: none;
     outline: none;
     background-color: #333233;
@@ -28,7 +30,8 @@
 }
 
 #mainPage .invoice-generation:hover,
-#mainPage .admin-panel:hover {
+#mainPage .admin-panel:hover,
+#mainPage .flipbook-generation:hover  {
     background-color: transparent;
     color: #333233;
     border: 1px solid #333233;
