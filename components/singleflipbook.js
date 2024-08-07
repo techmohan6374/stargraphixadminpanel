@@ -8,7 +8,7 @@ const SingleFlipBook = {
   data() {
     return {
       selectedPdfUrl: "",
-      githubToken: "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",
+      githubToken: "",
       owner: "techmohan6374",
       repo: "flipbook-pdf-files",
       path: "pdf-files/",
@@ -17,41 +17,24 @@ const SingleFlipBook = {
     };
   },
   created() {
-    this.fetchFiles();
-    setTimeout(() => {
-      this.pdfName = this.$route.params.pdfName;
-      const pdfFile = this.files.find((x) => x.name === this.pdfName);
-      this.selectedPdfUrl = pdfFile
-        ? `https://raw.githubusercontent.com/${this.owner}/${this.repo}/main/${this.path}${pdfFile.name}`
-        : "";
-      console.log(this.selectedPdfUrl);
-    }, 3000);
+    var pdfUrl = localStorage.getItem("pdfUrl");
+    console.log(pdfUrl);
+    this.selectedPdfUrl =
+      "https://raw.githubusercontent.com/" +
+      this.owner +'/'+
+      this.repo +
+      "/main/" +
+      this.path +
+      pdfUrl;
+    console.log(this.selectedPdfUrl);
   },
-  methods: {
-    fetchFiles() {
-      const url = `https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.path}`;
-      fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: `token ${this.githubToken}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            return response.json().then((error) => {
-              throw new Error(error.message);
+  mounted() {
+    if (!this.$route.query.reloaded) {
+        setTimeout(() => {
+            this.$router.replace({ ...this.$route, query: { reloaded: 'true' } }).then(() => {
+                location.reload();
             });
-          }
-        })
-        .then((data) => {
-          this.files = data;
-        })
-        .catch((error) => {
-          console.error(`Error: ${error.message}`);
-        });
-    },
-  },
+        }, 2000);
+    }
+},
 };

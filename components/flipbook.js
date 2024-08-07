@@ -11,7 +11,7 @@ const Flipbook = {
                 <div class="col-12 col-md-6 col-xl-3 mb-3" v-for="val in files" :key="val.sha">
                     <div class="card flipbook-card">
                         <p>{{ val.name }}</p>
-                        <button class="flex" v-on:click="openFlipBook(val.html_url)">
+                        <button class="flex" v-on:click="openFlipBook(val.name)">
                           <iconify-icon icon="material-symbols:book-5-outline"></iconify-icon>
                           View
                         </button>
