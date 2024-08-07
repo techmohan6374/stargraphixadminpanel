@@ -11,7 +11,7 @@ const Flipbook = {
                 <div class="col-12 col-md-6 col-xl-3 mb-3" v-for="val in files" :key="val.sha">
                     <div class="card flipbook-card">
                         <p>{{ val.name }}</p>
-                        <button class="flex" v-on:click="openFlipBook(val.name)">
+                        <button class="flex" v-on:click="openFlipBook(val.html_url)">
                           <iconify-icon icon="material-symbols:book-5-outline"></iconify-icon>
                           View
                         </button>
@@ -28,7 +28,7 @@ const Flipbook = {
   data() {
     return {
       file: null,
-      githubToken: "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",
+      githubToken: "",
       owner: "techmohan6374",
       repo: "flipbook-pdf-files",
       path: "pdf-files/",
@@ -120,7 +120,8 @@ const Flipbook = {
       };
     },
     openFlipBook(pdfName){
-      this.$router.push(`/singleflipBook/${pdfName}`);
+      localStorage.setItem("pdfUrl", pdfName);
+      this.$router.push(`/singleflipBook/`);
     }
   },
   mounted() {

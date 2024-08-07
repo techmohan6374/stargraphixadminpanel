@@ -4,7 +4,7 @@ const routes = [
     { path: '/admin', component: Admin },
     { path: '/invoice', component: Invoice },
     { path: '/flipbook', component: Flipbook },
-    { path: '/singleflipBook/:pdfName', component: SingleFlipBook }
+    { path: '/singleflipBook', component: SingleFlipBook }
 ];
 
 const router = new VueRouter({
