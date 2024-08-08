@@ -8,10 +8,10 @@ const Flipbook = {
                 </div>
             </div>
             <div class="row mt-4">
-                <div class="col-12 col-md-6 col-xl-3 mb-3" v-for="val in files" :key="val.sha">
+                <div class="col-12 col-md-6 col-xl-3 mb-3" v-for="(val, index) in files" :key="index">
                     <div class="card flipbook-card">
-                        <p>{{ val.name }}</p>
-                        <button class="flex" v-on:click="openFlipBook(val.name)">
+                        <p>{{ val.fileName }}</p>
+                        <button class="flex" v-on:click="openFlipBook(index)">
                           <iconify-icon icon="material-symbols:book-5-outline"></iconify-icon>
                           View
                         </button>
@@ -33,34 +33,14 @@ const Flipbook = {
       repo: "flipbook-pdf-files",
       path: "pdf-files/",
       fileUrl: "",
+      fileName:'',
       files: [],
     };
   },
   created() {
-    this.fetchFiles();
+    this.readFlipBookData();
   },
   methods: {
-    async fetchFiles() {
-      const url = `https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.path}`;
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            Authorization: `token ${this.githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.files = data;
-        } else {
-          const error = await response.json();
-          console.error(`Error: ${error.message}`);
-        }
-      } catch (error) {
-        console.error(`Error: ${error.message}`);
-      }
-    },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -74,7 +54,7 @@ const Flipbook = {
         notyf.error("Please select a file to upload.");
         return;
       }
-
+    
       const reader = new FileReader();
       reader.readAsDataURL(this.file);
       reader.onload = async () => {
@@ -86,7 +66,7 @@ const Flipbook = {
           message,
           content,
         });
-
+    
         try {
           const response = await fetch(url, {
             method: "PUT",
@@ -96,20 +76,31 @@ const Flipbook = {
             },
             body,
           });
-
+    
           if (response.ok) {
             const result = await response.json();
             this.fileUrl = result.content.download_url;
+            this.fileName = this.file.name;  // Store the file name here
+            console.log(this.fileName);
             Swal.fire({
               icon: "success",
               title: "Success",
               text: "Uploaded Successfully 😉😎",
             });
-
-            // Add a slight delay to ensure GitHub has updated the content
-            setTimeout(() => {
-              this.fetchFiles();
-            }, 2000); // 2 seconds delay
+    
+            const newOrderKey = firebase
+              .database()
+              .ref()
+              .child("pdf")
+              .push().key;
+            const pdfData = {
+              fileName: this.fileName, // Include the file name
+              fileUrl: this.fileUrl,   // Include the file URL
+            };
+            const updates = {};
+            updates[`/pdf/${newOrderKey}`] = pdfData;
+            await firebase.database().ref().update(updates);
+            this.readFlipBookData();
           } else {
             const error = await response.json();
             notyf.error(`Error: ${error.message}`);
@@ -118,13 +109,26 @@ const Flipbook = {
           notyf.error(`Error: ${error.message}`);
         }
       };
+    },    
+    openFlipBook(id) {
+      this.$router.push(`/singleflipBook/${id}`);
     },
-    openFlipBook(pdfName){
-      localStorage.setItem("pdfUrl", pdfName);
-      this.$router.push(`/singleflipBook/`);
-    }
-  },
-  mounted() {
-    this.fetchFiles();
+    readFlipBookData() {
+      database
+        .ref("pdf")
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            let pdfFiles = snapshot.val();
+            this.files = Object.keys(pdfFiles).map((key) => pdfFiles[key]);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    mounted() {
+      this.readFlipBookData();
+    },
   },
 };

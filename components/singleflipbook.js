@@ -1,40 +1,53 @@
 const SingleFlipBook = {
   template: `
-      <div class="container-fluid p-0 flex" style="min-height: 100vh;" id="power">
-        <div ref="flipbook" class="_df_book" webgl="true" backgroundcolor="#e6c959" :source="selectedPdfUrl" id="df_manual_book">
-        </div>
+      <div class="container-fluid p-0 flex" style="min-height: 100vh;" id="singleFlipBookViewer">
+          <div id="flipbookPDFContainer"></div>
+          
+          <div class="stargraphix-box animate__animated animate__bounceIn animate__infinite	infinite animate__slow	2s">
+            <a href="http://stargraphix.in/" target="_blank">
+              <img src="/resources/images/STAR GRAPHIX LOGO.png" alt="Star Graphix Logo" />
+            </a>
+          </div>
       </div>
     `,
   data() {
     return {
-      selectedPdfUrl: "",
-      githubToken: "",
-      owner: "techmohan6374",
-      repo: "flipbook-pdf-files",
-      path: "pdf-files/",
       files: [],
-      pdfName: "",
+      selectedPdfUrl: "",
+      index: null,
     };
   },
   created() {
-    var pdfUrl = localStorage.getItem("pdfUrl");
-    console.log(pdfUrl);
-    this.selectedPdfUrl =
-      "https://raw.githubusercontent.com/" +
-      this.owner +'/'+
-      this.repo +
-      "/main/" +
-      this.path +
-      pdfUrl;
-    console.log(this.selectedPdfUrl);
+    this.readFlipBookData();
+    this.index = this.$route.params.id;
+    setTimeout(() => {
+      var source_pdf = this.selectedPdfUrl;
+      var option_pdf = { webgl: true, backgroundColor: "#e6c959" };
+      var flipBook_pdf = $("#flipbookPDFContainer").flipBook(
+        source_pdf,
+        option_pdf
+      );
+    }, 2000);
+  },
+  methods: {
+    readFlipBookData() {
+      database
+        .ref("pdf")
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            let pdfFiles = snapshot.val();
+            this.files = Object.keys(pdfFiles).map((key) => pdfFiles[key]);
+            this.selectedPdfUrl = this.files[this.index].fileUrl;
+            console.log(this.selectedPdfUrl);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   },
   mounted() {
-    if (!this.$route.query.reloaded) {
-        setTimeout(() => {
-            this.$router.replace({ ...this.$route, query: { reloaded: 'true' } }).then(() => {
-                location.reload();
-            });
-        }, 2000);
-    }
-},
+    this.readFlipBookData();
+  },
 };

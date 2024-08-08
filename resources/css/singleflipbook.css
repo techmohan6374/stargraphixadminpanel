@@ -1,0 +1,21 @@
+#singleFlipBookViewer {
+    position: relative;
+}
+
+#singleFlipBookViewer .stargraphix-box {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    background-color: white;
+    border-radius: 50%;
+    z-index: 5000;
+    cursor: pointer;
+    padding: 11px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+#singleFlipBookViewer .stargraphix-box img{
+    width:100%;
+    height:100%;
+}

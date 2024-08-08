@@ -1,6 +1,6 @@
 const Invoice = {
     template: `
-    <div id="invoicePage">
+    <div id="invoicePage" style="overflow:hidden">
          <div class="row flex">
             <div class="col-12 col-md-4 col-xl-4">
                 <div class="card border-0 p-4">
