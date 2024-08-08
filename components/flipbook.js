@@ -24,7 +24,7 @@ const Flipbook = {
                 </div>
             </div>
         </div>
-        <button class="add-btn flex" title="Upload PDF" @click="triggerFileInput">
+        <button class="add-btn flex hint--top hint--bounce" @click="triggerFileInput" aria-label="Upload PDF">
             <iconify-icon icon="fluent-emoji-high-contrast:plus"></iconify-icon>
         </button>
         <input type="file" ref="fileInput" style="display: none;" @change="handleFileUpload" accept=".pdf">
