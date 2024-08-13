@@ -14,7 +14,7 @@ const Login = {
                         <iconify-icon icon="mdi:email-open-outline"></iconify-icon>
                     </div>
                     <div class="password-input flex mb-4" style="position: relative;">
-                        <input v-bind:type="type" placeholder="Enter your Password" v-model="password">
+                        <input v-bind:type="type" placeholder="Enter your Password" v-model="password" @keyup.enter="login">
                         <button class="password-button">
                             <iconify-icon v-bind:icon="eye" v-on:click="showPassword()"></iconify-icon>
                         </button>
