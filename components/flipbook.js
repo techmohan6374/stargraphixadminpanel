@@ -16,9 +16,12 @@ const Flipbook = {
                 <div class="col-12 col-md-6 col-xl-3 mb-3" v-for="(val, index) in files" :key="index">
                     <div class="card flipbook-card">
                         <p>{{ val.fileName }}</p>
-                        <button class="flex" v-on:click="openFlipBook(index)">
+                        <button class="flex view-btn" v-on:click="openFlipBook(index)">
                           <iconify-icon icon="material-symbols:book-5-outline"></iconify-icon>
                           View
+                        </button>
+                        <button class="remove-btn flex" v-on:click="deleteBook(val.fileName)">
+                          <iconify-icon icon="pajamas:remove"></iconify-icon>
                         </button>
                     </div>
                 </div>
@@ -124,6 +127,48 @@ const Flipbook = {
     openFlipBook(id) {
       this.$router.push(`/singleflipBook/${id}`);
     },
+    deleteBook(fileName) {
+      if(confirm('Are you sure to delte ?')){
+        database
+        .ref("pdf")
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            let pdfFiles = snapshot.val();
+            let fileKeyToDelete = null;
+
+            Object.keys(pdfFiles).forEach((key) => {
+              if (pdfFiles[key].fileName === fileName) {
+                fileKeyToDelete = key;
+              }
+            });
+
+            if (fileKeyToDelete) {
+              // Delete the file if found
+              database
+                .ref(`pdf/${fileKeyToDelete}`)
+                .remove()
+                .then(() => {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: `${fileName} has been deleted successfully.`,
+                  });
+                  this.files = this.files.filter(file => file.fileName !== fileName);
+                })
+                .catch((error) => {
+                  console.error("Error deleting PDF:", error);
+                });
+            } else {
+              console.log(`No PDF found with the file name ${fileName}.`);
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching PDF files:", error);
+        });
+      }
+    },
     readFlipBookData() {
       database
         .ref("pdf")
@@ -132,6 +177,7 @@ const Flipbook = {
           if (snapshot.exists()) {
             let pdfFiles = snapshot.val();
             this.files = Object.keys(pdfFiles).map((key) => pdfFiles[key]);
+            console.log(this.files);
           }
         })
         .catch((error) => {

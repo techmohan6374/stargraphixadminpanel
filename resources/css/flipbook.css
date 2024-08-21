@@ -22,7 +22,7 @@
     font-size: 15px;
 }
 
-#flipBook .card button {
+#flipBook .card .view-btn {
     border: none;
     outline: none;
     padding: 10px 15px;
@@ -33,11 +33,11 @@
     gap: 5px;
 }
 
-#flipBook .card button iconify-icon {
+#flipBook .card .view-btn iconify-icon {
     font-size: 20px;
 }
 
-#flipBook .card button:hover {
+#flipBook .card .view-btn:hover {
     background-color: #b41832;
 }
 
@@ -66,6 +66,28 @@
     position: absolute;
     left: 0px;
     top: 0px;
+}
+
+#flipBook .flipbook-card {
+    position: relative;
+}
+
+#flipBook .remove-btn {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 14px;
+}
+
+#flipBook .remove-btn:hover {
+    background-color: grey;
 }
 
 #flipBook .loader {
