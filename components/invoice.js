@@ -225,7 +225,7 @@ const Invoice = {
             doc.setTextColor(0, 0, 0);
 
             // Format date using moment
-            doc.text(164, 50, moment(invoiceDate).format("DD-MM-YYYY")); // Use moment() with invoiceDate
+            doc.text(164, 45, moment(invoiceDate).format("DD-MM-YYYY")); // Use moment() with invoiceDate
 
             doc.setFontSize(15);
             doc.setTextColor(223, 26, 46);
